@@ -1,0 +1,6 @@
+- [x] Add Navigation and ViewModel dependencies
+- [/] Setup Navigation routes and controller
+- [ ] Implement Registration Screen
+- [ ] Implement Login Screen
+- [ ] Implement Home Screen
+- [ ] Wire everything in MainActivity
