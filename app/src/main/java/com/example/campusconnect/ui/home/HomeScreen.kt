@@ -1,27 +1,31 @@
 package com.example.campusconnect.ui.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.campusconnect.R
+import com.example.campusconnect.data.Post
 import com.example.campusconnect.ui.settings.SettingsViewModel
 import com.example.campusconnect.ui.theme.CampusConnectTheme
 
@@ -29,16 +33,30 @@ import com.example.campusconnect.ui.theme.CampusConnectTheme
 @Composable
 fun HomeScreen(
     onLogout: () -> Unit,
+    onNavigateTimetable: () -> Unit,
+    onNavigateProfile: () -> Unit,
     onNavigateToSettings: () -> Unit,
+    homeViewModel: HomeViewModel = viewModel(),
     settingsViewModel: SettingsViewModel
 ) {
     val isOfflineMode by settingsViewModel.isOfflineMode.collectAsState()
+    val posts by homeViewModel.posts.collectAsState()
+
+    var showAddPostDialog by remember { mutableStateOf(false) }
+    var showNotificationsDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_app_logo),
+                            contentDescription = "Logo",
+                            modifier = Modifier
+                                .size(28.dp)
+                                .padding(end = 8.dp)
+                        )
                         Text("CampusConnect", fontWeight = FontWeight.Bold)
                         if (isOfflineMode) {
                             Spacer(modifier = Modifier.width(8.dp))
@@ -52,7 +70,7 @@ fun HomeScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* TODO: Notifications */ }) {
+                    IconButton(onClick = { showNotificationsDialog = true }) {
                         Icon(Icons.Default.Notifications, contentDescription = "Notifications")
                     }
                     IconButton(onClick = onLogout) {
@@ -66,7 +84,7 @@ fun HomeScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* TODO: Add post */ }) {
+            FloatingActionButton(onClick = { showAddPostDialog = true }) {
                 Icon(Icons.Default.Add, contentDescription = "Add Post")
             }
         },
@@ -79,10 +97,16 @@ fun HomeScreen(
                     onClick = { }
                 )
                 NavigationBarItem(
+                    icon = { Icon(Icons.Default.Schedule, contentDescription = null) },
+                    label = { Text("Timetable") },
+                    selected = false,
+                    onClick = onNavigateTimetable
+                )
+                NavigationBarItem(
                     icon = { Icon(Icons.Default.Person, contentDescription = null) },
                     label = { Text("Profile") },
                     selected = false,
-                    onClick = { }
+                    onClick = onNavigateProfile
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Settings, contentDescription = null) },
@@ -99,7 +123,23 @@ fun HomeScreen(
                 .fillMaxSize()
         ) {
             WelcomeSection()
-            EventFeed()
+            EventFeed(posts = posts, onDeletePost = { homeViewModel.deletePost(it) })
+        }
+
+        if (showAddPostDialog) {
+            AddPostDialog(
+                onDismiss = { showAddPostDialog = false },
+                onAddPost = { title, content, author, category ->
+                    homeViewModel.addPost(title, content, author, category)
+                    showAddPostDialog = false
+                }
+            )
+        }
+
+        if (showNotificationsDialog) {
+            NotificationsDialog(
+                onDismiss = { showNotificationsDialog = false }
+            )
         }
     }
 }
@@ -129,16 +169,7 @@ fun WelcomeSection() {
 }
 
 @Composable
-fun EventFeed() {
-    val events = listOf(
-        "Annual Hackathon 2027 - Register Now!",
-        "Rugby Finals: Emeris Varsity College vs Collegians Rugby Club",
-        "Library Workshop: Researching Made Easy",
-        "Career Fair - Hall B, 10 AM",
-        "Student Council Meeting - Room 402",
-        "Mgilane Birthday Activation-Ground Floor at Common break"
-    )
-
+fun EventFeed(posts: List<Post>, onDeletePost: (Post) -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
@@ -146,35 +177,52 @@ fun EventFeed() {
     ) {
         item {
             Text(
-                text = "Latest Updates",
+                text = "Campus Feed & Updates",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
-        items(events) { event ->
-            EventItem(title = event)
+        items(posts) { post ->
+            EventItem(post = post, onDelete = { onDeletePost(post) })
         }
     }
 }
 
 @Composable
-fun EventItem(title: String) {
+fun EventItem(post: Post, onDelete: () -> Unit) {
     OutlinedCard(
         modifier = Modifier.fillMaxWidth()
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = title, fontWeight = FontWeight.Medium)
-                Text(text = "Posted 2 hours ago", fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Badge {
+                    Text(text = post.category, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
+                }
+                Text(text = post.timestamp, fontSize = 12.sp, color = MaterialTheme.colorScheme.outline)
             }
-            TextButton(onClick = { /* TODO */ }) {
-                Text("View")
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = post.title, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = post.content, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "By ${post.author}", fontSize = 12.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.primary)
+                IconButton(onClick = onDelete, modifier = Modifier.size(24.dp)) {
+                    Icon(Icons.Default.Delete, contentDescription = "Delete Post", tint = MaterialTheme.colorScheme.error)
+                }
             }
         }
     }
@@ -186,6 +234,8 @@ fun HomeScreenPreview() {
     CampusConnectTheme {
         HomeScreen(
             onLogout = {},
+            onNavigateTimetable = {},
+            onNavigateProfile = {},
             onNavigateToSettings = {},
             settingsViewModel = viewModel()
         )
