@@ -73,11 +73,9 @@ CampusConnect/
 
 ## Demo video
 
-Watch the project walkthrough here:
+Watch the CampusConnect walkthrough:
 
-[CampusConnect Demo Video](https://your-demo-link-here.com)
-
-> If you send me the actual video URL, I can replace this placeholder with the exact link.
+[▶️ Watch the demonstration video](https://1drv.ms/v/c/4fd913e1c271c48d/IQDzscXhNhy7RL4LbG_SxXsDAT38eP-9QnpuFey_yDXkDkA?e=cAsHdp)
 
 ## Getting started
 
