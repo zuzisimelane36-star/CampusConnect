@@ -1,27 +1,35 @@
 # CampusConnect
 
-CampusConnect is a student-focused Android app designed to help university and college communities stay connected, informed, and organized. From signing in and creating an account to browsing updates, students can use the app to keep up with campus events, announcements, and important information in a clean, modern experience.
+CampusConnect is a student-first Android app built to help university communities stay connected, informed, and organized without the usual chaos of scattered announcements, forgotten deadlines, and fragmented campus information.
 
-Built with Kotlin and Jetpack Compose, CampusConnect focuses on a simple and friendly user experience while also supporting offline-first access for essential app behavior.
+Whether students are checking updates, managing their schedule, or staying in the loop with campus happenings, CampusConnect brings the essentials into one clean, friendly mobile experience.
 
-## Why this app exists
+Built with Kotlin and Jetpack Compose, this app focuses on a simple interface, smooth navigation, and useful everyday features that make student life easier.
 
-Campus life moves fast. Students often miss deadlines, events, and announcements because information is scattered across multiple channels. CampusConnect brings those essentials together in one place so students can:
+## Why CampusConnect?
 
-- log in or register with their student account
-- view campus updates and announcements
-- access the app even when connectivity is limited
-- manage app settings such as dark mode and offline mode
-- enjoy a clean interface designed for everyday student use
+Student life is busy. There are deadlines, classes, events, notifications, and updates everywhere—and it is easy to miss important information.
 
-## Main features
+CampusConnect was designed to solve that problem by creating one place where students can:
+
+- sign in or create a student account
+- view campus announcements and updates
+- stay on top of their timetable
+- check notifications and important alerts
+- browse a student-focused community feed
+- enjoy a clean and modern mobile experience
+
+## App highlights
 
 - Student login and registration flow
-- Offline authentication support using local storage
-- App-wide settings for dark mode and offline mode
-- Campus dashboard with welcome section and event feed
-- Modern Material 3 interface
-- Jetpack Compose navigation between screens
+- Offline-friendly authentication support using local storage
+- Campus dashboard with welcome content and an event/news feed
+- Profile section for students
+- Timetable management view
+- Notifications and alerts center
+- Campus feed for updates and community activity
+- Android app branding and polished UI design
+- Material 3 styling with modern Jetpack Compose screens
 
 ## Tech stack
 
@@ -30,7 +38,8 @@ Campus life moves fast. Students often miss deadlines, events, and announcements
 - Jetpack Compose
 - Room Database
 - ViewModel and StateFlow
-- Material 3 Design Components
+- Material 3 components
+- Android Studio
 
 ## Project structure
 
@@ -50,15 +59,25 @@ CampusConnect/
 ├── gradlew.bat
 ├── settings.gradle.kts
 ├── README.md
-└── .gitignore
+├── .gitignore
+└── .idea/
 ```
 
-## App flow
+## How the app works
 
-1. Launch the app and land on the authentication flow.
+1. Open the app and start on the authentication flow.
 2. Register a new student account or log in with an existing one.
-3. Access the home dashboard after successful authentication.
-4. View latest campus updates and use the settings screen to tailor the app experience.
+3. Move into the main dashboard after successful login.
+4. Explore key sections like profile, timetable, notifications, and campus feed.
+5. Use the app to stay organized and informed throughout the academic day.
+
+## Demo video
+
+Watch the project walkthrough here:
+
+[CampusConnect Demo Video](https://your-demo-link-here.com)
+
+> If you send me the actual video URL, I can replace this placeholder with the exact link.
 
 ## Getting started
 
@@ -68,7 +87,7 @@ CampusConnect/
 - JDK 11 or newer
 - Android SDK configured for API 24+
 
-### Run the app
+### Run the app locally
 
 ```bash
 git clone https://github.com/zuzisimelane36-star/CampusConnect.git
@@ -84,16 +103,19 @@ Then open the project in Android Studio and run it on an emulator or a physical 
 - Registration screen
 - Splash screen
 - Home dashboard
+- Profile screen
+- Timetable screen
+- Notifications screen
+- Campus feed
 - Settings screen
-- Navigation flow between app sections
 
 ## Notes
 
-This project is a student app prototype and includes core UI and local data functionality. It is a good base for extending with real backend services, live campus data, announcements, and student profiles.
+This project is a strong student app prototype with a modern UI and essential functionality. It offers a solid base for future expansion, including backend integration, real-time announcements, live timetable syncing, and richer campus community features.
 
 ## Contributing
 
-Contributions are welcome. If you want to improve the UI, add new screens, or connect the app to a real backend, feel free to fork the project and submit a pull request.
+Contributions are welcome. If you want to improve the interface, add new screens, or connect the app to a real backend, feel free to fork the repository and submit a pull request.
 
 ## License
 
